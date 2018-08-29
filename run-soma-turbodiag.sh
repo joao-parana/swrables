@@ -1,20 +1,20 @@
-cd oo
+cd oo > /dev/null
 # STDOUT_OUTPUT_FROM_PROGRAM=`./turbodiag.py`
 while true; do
-  ./turbodiag.py
+  ./turbodiag.py > /dev/null
   RET_CODE="$?"
-  echo "RET_CODE = $?"
+  echo "*** RET_CODE = ${RET_CODE}"
   if (("$RET_CODE" != "0")); then
-    echo "Ocorreu um erro ou terminou o processamento de todos os registros"
     break
   fi
 done
 
-cd -
+cd -  > /dev/null
 
-if (("$RET_CODE" != "127")); then
-  echo "Terminou o processamento de todos os registros"
-  break
+if (("$RET_CODE" == "123")); then
+  echo "*** ATENCAO: Terminou o processamento de todos os registros"
+else
+    echo "*** ATENCAO: Ocorreu o erro numero ${RET_CODE}"
 fi
 
 # echo ${STDOUT_OUTPUT_FROM_PROGRAM}

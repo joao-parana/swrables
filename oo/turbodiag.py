@@ -366,7 +366,7 @@ class TurboDiag:
             # print(str(w3))
             if (str(w1) == "{}" and str(w2) == "{}" and str(w3) == "{}") :
                 print("Nada mais a processar")
-                sys.exit(127)
+                sys.exit(123)
 
             self.doNextProcessingWindow(dict)
             print MecanismoDano.TIMESTAMP_OF_DATA
