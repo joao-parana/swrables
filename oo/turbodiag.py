@@ -342,6 +342,8 @@ class TurboDiag:
 
         print "Status Code do HTTP = " + str(r.status_code) + r.reason
         print('\nDEBUG: '+ r.text[:78] + '...\n')
+        # Condicao de parada: {"operation":"getNextProcessingWindow","windowList":[{},{},{}],"successful":true}
+
 
         datFileName = 'problem.json'
         print('Salvando arquivo ' + datFileName)
@@ -352,6 +354,20 @@ class TurboDiag:
         dict = json.loads(r.text)
         # print (dict['operation'] == 'getNextProcessingWindow', dict['successful'])
         if (dict['operation'] == 'getNextProcessingWindow' and dict['successful']):
+            windowList = dict['windowList']
+            w1 = dict['windowList'][0] 
+            w2 = dict['windowList'][1] 
+            w3 = dict['windowList'][2] 
+            print(str(w1) == "{}")
+            print(str(w2) == "{}")
+            print(str(w3) == "{}")
+            # print(str(w1))
+            # print(str(w2))
+            # print(str(w3))
+            if (str(w1) == "{}" and str(w2) == "{}" and str(w3) == "{}") :
+                print("Nada mais a processar")
+                sys.exit(127)
+
             self.doNextProcessingWindow(dict)
             print MecanismoDano.TIMESTAMP_OF_DATA
         else:

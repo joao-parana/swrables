@@ -36,18 +36,41 @@ if  LOCAL_TEST :
 else:
     r = requests.post( serviceURI, data = dataToService )
 
-print("Status Code do HTTP = " + r.status_code, r.reason)
+print(r.status_code)
+print(r.reason)
+print("Status Code do HTTP = " + str(r.status_code), r.reason)
 print('\n'+ r.text[:228] + '...\n')
 
-# print("Saida formatada com 4 espaços de indentação")
-# print json.dumps(r.text, indent = 4, sort_keys = True)
-# print ('\n')
+print("Saida formatada com 4 espaços de indentação")
+print json.dumps(r.text, indent = 4, sort_keys = True)
+print ('\n')
 
 dict = json.loads(r.text)
 print (dict['operation'] == 'getNextProcessingWindow', dict['successful'])
 if (dict['operation'] == 'getNextProcessingWindow' and dict['successful']) :
     print '\nOK na recuperação da NextProcessingWindow'
     windowList = dict['windowList']
+
+    print "Status Code do HTTP = " + str(r.status_code) + r.reason
+    print('\nDEBUG: '+ r.text[:78] + '...\n')
+    # Condicao de parada: {"operation":"getNextProcessingWindow","windowList":[{},{},{}],"successful":true}
+    windowList = dict['windowList']
+    w1 = dict['windowList'][0] 
+    w2 = dict['windowList'][1] 
+    w3 = dict['windowList'][2]
+    print(str(w1) == "{}")
+    print(str(w2) == "{}")
+    print(str(w3) == "{}")
+    print(str(w1))
+    print(str(w2))
+    print(str(w3))
+
+    if (str(w1) == "{}" and str(w2) == "{}" and str(w3) == "{}") :
+        print("Nada mais a processar")
+        sys.exit(127)
+    
+    sys.exit(0)
+
     for x in range(0, 3):
         print "Vou processar " + dict['windowList'][x]['residualLifeSegment']
         dadosRecuperados = dict['windowList'][x]['data']
